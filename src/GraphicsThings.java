@@ -1,11 +1,37 @@
 
 /**
- * @(#)GraphicsThings.java
+ * 1. Get info
+ *          1.1.1 Get first picture from a specific file on computer
+ *          1.1.2 Get second picture from a specific file on computer
+ *          1.1.3 Get third picture from a specific file on computer
+ *      1.2. Get parameters for circle
+ *      1.3. Get parameters for line
+ *      1.4. Get parameters for polygon
+ *      1.5. Get parameters for hexagon
+ *      1.6. Get parameters for arc
+ *          1.7.1. Get parameters for invisible rectangle
+ *          1.7.2. Get parameters for invisible rectangle 2
+ *          1.7.3. Get parameters for invisible rectangle 3
+ *               1.8.1. Get the variations of the circle after click of picture one
+ *               1.8.2. Get the variations of the hexagon after click of picture two
+ *               1.8.3. Get the variations of the polygon after click of picture three
+ * 2. Do calculations
+ *      2.1. Calculate the parameters for the hexagon's offset to the circle
+ *      2.2. Calculate the parameters for the hexagon's points/parameters
+ *      2.3. Calculate the parameters for the polygon's points/parameters
+ * 3. Print Results
+ *      3.1. Draw the line
+ *      3.2. Draw the arc
+ *      3.3. Draw the circle
+ *      3.4. Draw the polygon
+ *      3.5. Draw teh hexagon
+ *          3.6.1. Print the first picture
+ *          3.6.2. Print the second picture
+ *          3.6.3. Print the third picture
+ *              3.7.1. Print the variation of circle after click of picture one
+ *              3.7.2. Print the variation of hexagon after click of picture two
+ *              3.7.3. Print the variation of polygon after click of picture three
  *
- * GraphicsThings Applet application
- *
- * @author
- * @version 1.00 2019/3/18
  */
 
 
@@ -16,6 +42,7 @@ import java.applet.*;
 
 public class GraphicsThings extends Applet {
 
+            //all the declarations
     Image picture;
     Image picture2;
     Image picture3;
@@ -24,9 +51,12 @@ public class GraphicsThings extends Applet {
     Rectangle rectangle3;
     int numClicks;
     int imageNumber = 0;
+    int centerX;
+    int centerY;
+    int radius;
 
 
-
+        //pictures used
     public void init() {
         picture = getImage(getDocumentBase(),"Big Bird.jpg");
         picture2 = getImage(getDocumentBase(),"Big Bird Resting.jpg");
@@ -44,7 +74,7 @@ public class GraphicsThings extends Applet {
 
 
 
-
+            //changing the size of the pictures and the drawings
     public void paint(Graphics g) {
 
         int width = picture.getWidth(this)/3;
@@ -73,6 +103,8 @@ public class GraphicsThings extends Applet {
 
         for (int x=100, y=100; x <= 300; x+=5, y+=5)
             g.fillRect(x,y,2,2);
+
+
         g.fillArc(50, 150, 100, 75, 90, 90);
         //         X   Y     W   H   SA   deg
 
@@ -83,11 +115,49 @@ public class GraphicsThings extends Applet {
         g.setFont(new Font("Arial",Font.BOLD,40));
         g.drawString("Hello there.",100,100 );
 
+        //the circle with its parameters
+        radius = 100;
+        centerX = 200;
+        centerY = 400;
+        drawCircle(g,radius,centerX,centerY);
 
+        //The hexigon with its parameters
+        drawHexigon(g,radius,(centerX + (radius * 2) + 50),(centerY + (radius * 2) + 50),myPurple);
+
+
+
+        //The polygon with its parameters
+        int xCoord[] = {400,550,500,300,250};
+        int yCoord[] = {70,200,350,350,200};
+        drawPolygon(g, xCoord, yCoord, 5, Color.blue);
+
+        switch (imageNumber) {         //Decides what changes are made when each image is clicked
+            case 1:
+                drawCircle(g,200,200,400);
+                break;
+
+            case 2:
+                drawHexigon(g,350,(centerX + (radius * 2) + 50),(centerY + (radius * 2) + 50),myPurple);
+                break;
+            case 3:
+                drawPolygon(g, xCoord, yCoord, 5, Color.orange);
+                break;
+
+        }
+
+
+
+/*
+        {
+            g.drawString("Mouse is clicked " + numClicks + " times.",20,20);
+        }
+*/
+
+    }
+
+    public void drawCircle (Graphics g, int radius, int centerX, int centerY) {    //circle function
         int x,y;
-        int radius = 100;
-        int centerX = 200;
-        int centerY = 400;
+
         g.setColor(Color.blue);
         for (double radian = 0; radian <= 2 * Math.PI; radian += 0.01)
         {
@@ -95,10 +165,9 @@ public class GraphicsThings extends Applet {
             y = (int) Math.round(Math.sin(radian) * radius) + centerY;
             g.drawLine(x,y,x,y);
         }
+    }
 
-         radius = 100;
-         centerX = (centerX + (radius * 2) + 50);
-         centerY = (centerY + (radius * 2) + 50);
+    public void drawHexigon (Graphics g, int radius, int centerX, int centerY, Color color) {   //hexigon function
         double twoPI = 2 * Math.PI;
         g.setColor(Color.blue);
         int x1 = (int) Math.round(Math.cos(twoPI * 1/6) * radius) + centerX;
@@ -121,53 +190,16 @@ public class GraphicsThings extends Applet {
         hex.addPoint(x4,y4);
         hex.addPoint(x5,y5);
         hex.addPoint(x6,y6);
+        g.setColor(color);
         g.fillPolygon(hex);
-        g.setColor(myPurple);
-
-
-
-
-        int xCoord[] = {400,550,500,300,250};
-        int yCoord[] = {70,200,350,350,200};
-        g.fillPolygon(xCoord,yCoord,5);
-
-
-        switch (imageNumber) {
-            case 1:
-                if(g.getColor() == Color.blue) {
-                    g.setColor(myPurple);
-                    g.fillPolygon(hex);
-                    System.out.println("purple");
-
-                } else if (g.getColor() == myPurple) {
-                    g.setColor(Color.blue);
-                    g.fillPolygon(hex);
-                    System.out.println("blue");
-                }
-                break;
-
-            case 2:
-
-                break;
-            case 3:
-
-                break;
-        }
-
-
-
-/*
-        {
-            g.drawString("Mouse is clicked " + numClicks + " times.",20,20);
-        }
-*/
-
     }
 
+    public void drawPolygon (Graphics g, int[] xCoord, int[] yCoord, int points, Color color) {     //polygon function
+        g.setColor(color);
+        g.fillPolygon(xCoord,yCoord, points);
+    }
 
-
-
-    public boolean mouseDown(Event e, int x, int y)
+    public boolean mouseDown(Event e, int x, int y)    //Actual mouse click tracker
     {
 
         if (rectangle1.contains(x, y)) {
